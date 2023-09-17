@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstrumentServiceWS", "InstrumentServiceWS\InstrumentServiceWS.csproj", "{4294E399-A7D5-4173-BF70-CB1BC1D2F3B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstrumentServiceBO", "InstrumentServiceBO\InstrumentServiceBO.csproj", "{E98A5D15-2B76-4C3F-94F7-4F35B272D056}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4294E399-A7D5-4173-BF70-CB1BC1D2F3B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4294E399-A7D5-4173-BF70-CB1BC1D2F3B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4294E399-A7D5-4173-BF70-CB1BC1D2F3B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4294E399-A7D5-4173-BF70-CB1BC1D2F3B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E98A5D15-2B76-4C3F-94F7-4F35B272D056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E98A5D15-2B76-4C3F-94F7-4F35B272D056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E98A5D15-2B76-4C3F-94F7-4F35B272D056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E98A5D15-2B76-4C3F-94F7-4F35B272D056}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {451209C3-E4A5-45CB-BE64-26BF683C17FC}
+	EndGlobalSection
+EndGlobal
