@@ -22,10 +22,8 @@ namespace InstrumentServiceBO
             try
             {
                 logger.Warn($"JOB Çalıştı. {DateTime.Now}");
-                Console.WriteLine($"JOB Çalıştı. {DateTime.Now}");
 
                 var gds = Talker.GetInstrumentList();
-                Console.WriteLine($"Enstruman listesi çekildi. Sayısı = {gds.Tables[0].Rows.Count} - {DateTime.Now}");
                 logger.Warn($"Enstruman listesi çekildi. Sayısı = {gds.Tables[0].Rows.Count} - {DateTime.Now}");
 
                 DataRow[] rows = gds.Tables[0].Select("IS_MAIN = 1");
@@ -123,28 +121,21 @@ namespace InstrumentServiceBO
                 .Select(x => new HashEntry(GetCodeForClearExtention(x.N), JsonConvert.SerializeObject(x)))
                 .ToList();
 
-                Console.WriteLine($"Modelleme tamamlandı. {DateTime.Now}");
 
                 var redisDatabase = context.Scheduler.Context["RedisDatabase"] as IDatabase;
                 await redisDatabase.KeyDeleteAsync(cacheKeyHashedList);
-                Console.WriteLine($"Redis Key silindi. {cacheKeyHashedList} - {DateTime.Now}");
                 logger.Warn($"Redis Key silindi. {cacheKeyHashedList} - {DateTime.Now}");
                 await redisDatabase.HashSetAsync(cacheKeyHashedList, hashEntryList.ToArray());
-                Console.WriteLine($"Redis Key eklendi. {cacheKeyHashedList} - {DateTime.Now}");
                 logger.Warn($"Redis Key eklendi. {cacheKeyHashedList} - {DateTime.Now}");
                 await redisDatabase.KeyDeleteAsync(cacheKeyList);
-                Console.WriteLine($"Redis Key silindi. {cacheKeyList} - {DateTime.Now}");
                 logger.Warn($"Redis Key silindi. {cacheKeyList} - {DateTime.Now}");
                 await redisDatabase.StringSetAsync(cacheKeyList, JsonConvert.SerializeObject(instrumentList));
-                Console.WriteLine($"Redis Key eklendi. {cacheKeyList} - {DateTime.Now}");
                 logger.Warn($"Redis Key eklendi. {cacheKeyList} - {DateTime.Now}");
 
                 logger.Warn($"JOB Tamamlandı. {DateTime.Now}");
-                Console.WriteLine($"JOB Tamamlandı. {DateTime.Now}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 logger.Error($"Error: {ex.Message} Date: {DateTime.Now}");
             }
         }
