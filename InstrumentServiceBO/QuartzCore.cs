@@ -18,16 +18,16 @@ namespace InstrumentServiceBO
         {
 			try
 			{
-                var redisConnectionString = ConfigurationManager.AppSettings["RedisConnection"].ToString();
-                var redisConfiguration = ConfigurationOptions.Parse(redisConnectionString);
-                redisConfiguration.Password = ConfigurationManager.AppSettings["RedisPassword"].ToString();
-                var redis = ConnectionMultiplexer.Connect(redisConfiguration);
-                var redisDatabase = redis.GetDatabase(Convert.ToInt32(ConfigurationManager.AppSettings["RedisConnectionDbId"]));
+                //var redisConnectionString = ConfigurationManager.AppSettings["RedisConnection"].ToString();
+                //var redisConfiguration = ConfigurationOptions.Parse(redisConnectionString);
+                //redisConfiguration.Password = ConfigurationManager.AppSettings["RedisPassword"].ToString();
+                //var redis = ConnectionMultiplexer.Connect(redisConfiguration);
+                //var redisDatabase = redis.GetDatabase(Convert.ToInt32(ConfigurationManager.AppSettings["RedisConnectionDbId"]));
 
                 var schedulerFactory = new StdSchedulerFactory();
                 var scheduler = await schedulerFactory.GetScheduler();
-                scheduler.Context.Put("RedisDatabase", redisDatabase);
-
+                //scheduler.Context.Put("RedisDatabase", redisDatabase);
+                InstrumentJob instrumentJob = new InstrumentJob();
                 var job = JobBuilder.Create<InstrumentJob>()
                     .WithIdentity("InstrumentJob")
                     .Build();

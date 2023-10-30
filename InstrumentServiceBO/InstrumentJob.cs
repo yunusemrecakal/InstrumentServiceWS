@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Caching.Redis;
+using Newtonsoft.Json;
 using NLog;
 using Quartz;
 using StackExchange.Redis;
@@ -16,6 +17,12 @@ namespace InstrumentServiceBO
     public class InstrumentJob : IJob
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        public static RedisClientManager RedisClientManager { get; set; }
+
+        public InstrumentJob()
+        {
+            RedisClientManager = RedisClientManager.Instance;
+        }
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -122,14 +129,14 @@ namespace InstrumentServiceBO
                 .ToList();
 
 
-                var redisDatabase = context.Scheduler.Context["RedisDatabase"] as IDatabase;
-                await redisDatabase.KeyDeleteAsync(cacheKeyHashedList);
+                //var redisDatabase = context.Scheduler.Context["RedisDatabase"] as IDatabase;
+                RedisClientManager.Delete(cacheKeyHashedList);
                 logger.Warn($"Redis Key silindi. {cacheKeyHashedList} - {DateTime.Now}");
-                await redisDatabase.HashSetAsync(cacheKeyHashedList, hashEntryList.ToArray());
+                RedisClientManager.SetHash(cacheKeyHashedList, hashEntryList.ToArray());
                 logger.Warn($"Redis Key eklendi. {cacheKeyHashedList} - {DateTime.Now}");
-                await redisDatabase.KeyDeleteAsync(cacheKeyList);
+                RedisClientManager.Delete(cacheKeyList);
                 logger.Warn($"Redis Key silindi. {cacheKeyList} - {DateTime.Now}");
-                await redisDatabase.StringSetAsync(cacheKeyList, JsonConvert.SerializeObject(instrumentList));
+                RedisClientManager.Set(cacheKeyList, JsonConvert.SerializeObject(instrumentList));
                 logger.Warn($"Redis Key eklendi. {cacheKeyList} - {DateTime.Now}");
 
                 logger.Warn($"JOB Tamamlandı. {DateTime.Now}");

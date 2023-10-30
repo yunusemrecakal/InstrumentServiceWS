@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gtp.Framework.GtpDataSet</name>
+    </assembly>
+    <members>
+        <member name="T:Gtp.Framework.DecorationDictionary">
+            <summary>
+            Decoration list for all tables
+            </summary>
+        </member>
+        <member name="M:Gtp.Framework.Condition.#ctor(Gtp.Framework.ComparisonType,System.Object,System.Object,Gtp.Framework.StyleCollection,Gtp.Framework.StyleAffects)">
+            <summary>
+            Applies a pre-defined style into a row or cell which its stipulated column provides a given condition
+            </summary>
+            <param name="comparison">Comparision Type (use ComparisonType enum)</param>
+            <param name="value1">First value of the comparision. It can't be empty</param>
+            <param name="value2">Optional. Second value of the comparision operation. Can be used with Between and NotBetween operators (If it's empty use ComparisonType.None enum)</param>
+            <param name="style">Pre-defined decoration. It can be one of the StyleCollection enum's values</param>
+            <param name="affects">Affect area of the style. If it's StyleAffects.Row, Style will be applied all of the columns of the row</param>
+        </member>
+        <member name="T:Gtp.Framework.DecorationCollection">
+            <summary>
+            Generic DecorationCollection class
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.ConditionDictionary">
+            <summary>
+            Condition list for all tables
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.ConditionCollection">
+            <summary>
+            Condition list for all collections in a table
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.GtpDataSet">
+            <summary>
+            Gtp DataSet implementation
+            </summary>
+        </member>
+        <member name="M:Gtp.Framework.Decoration.#ctor(System.String,Gtp.Framework.EditTypes,Gtp.Framework.SummaryTypes,System.String,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Int32,System.Boolean,System.String,System.String,System.String,System.String)">
+            <summary>
+            Formats or adds some specific functions on a grid column
+            </summary>
+            <param name="_Caption">Header caption of the column</param>
+            <param name="_EditType">Edit and Display Format of the column which its control type given by the EditTypes enum</param>
+            <param name="_SummaryType">Adds a summary cell under the column. SummaryTypes enum provides possible format types</param>
+            <param name="_Width">Width of the column</param>
+            <param name="_DecimalPlaces">Decimal digit count of a number</param>
+            <param name="_Editable">Makes the column Editable/UnEditable</param>
+            <param name="_Visible">Hides/Unhides the column</param>
+            <param name="_ColIndex">Visible Column Index</param>
+            <param name="_WordWrap">Wraps or remains plain the text in a cell</param>
+            <param name="_ColumnFormatString">Format string of column. It overrides the default value. Date, Integer, Currency, Decimal Controls could be formatted by this</param>
+            <param name="_ComboSourceTableName">Combo Source DataTable Name which its data takes place in same DataSet</param>
+            <param name="_ComboSourceColumns">Data Source column(s) of the combobox. This column is not shown in the combo box</param>
+            <param name="_ComboDisplayColumns">Displayed column(s) of the combobox. User selects this value from the combo box</param>
+        </member>
+        <member name="M:Gtp.Framework.Decoration.#ctor(System.String,Gtp.Framework.EditTypes,System.Boolean)">
+            <summary>
+            Formats or adds some specific functions on a grid column
+            </summary>
+            <param name="_Caption">Header caption of the column</param>
+            <param name="_EditType">Edit and Display Format of the column which its control type given by the EditTypes enum</param>
+            <param name="_Visible">Hides/Unhides the column</param>
+        </member>
+        <member name="M:Gtp.Framework.Decoration.#ctor(System.String,Gtp.Framework.EditTypes,System.Boolean,System.Boolean)">
+            <summary>
+            Formats or adds some specific functions on a grid column
+            </summary>
+            <param name="_Caption">Header caption of the column</param>
+            <param name="_EditType">Edit and Display Format of the column which its control type given by the EditTypes enum</param>
+            <param name="_Visible">Hides/Unhides the column</param>
+            <param name="_Editable">Makes the column Editable/UnEditable</param>
+        </member>
+    </members>
+</doc>

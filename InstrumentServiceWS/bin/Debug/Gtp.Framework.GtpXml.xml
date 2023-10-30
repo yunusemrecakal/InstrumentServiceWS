@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gtp.Framework.GtpXml</name>
+    </assembly>
+    <members>
+        <member name="T:Gtp.Framework.ErrorEntry">
+            <summary>
+            GtpXml ErrorEntry class
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.ImportPart">
+            <summary>
+            Import parts. Value overrides are required for bitwise operations.
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.GtpXml">
+            <summary>
+            GtpXml utility functions wrapper
+            </summary>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.HashText(System.String,System.String)">
+            <summary>
+            default hash method
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Create a new instance of GtpXml wrapper
+            </summary>
+            <param name="gtpXml">XmlDocument which contains GtpXml</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.#ctor(System.String,System.String)">
+            <summary>
+            Create a new instance of GtpXml document for a specified request class
+            </summary>
+            <param name="requestClass">request class</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.#ctor(System.String)">
+            <summary>
+            Create a new GtpXml wrapper from an Xml string
+            </summary>
+            <param name="gtpXml">Xml string</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.Import(Gtp.Framework.GtpXml,Gtp.Framework.ImportPart)">
+            <summary>
+            Imports the whole or a part of a GtpXml object into an existing one. 
+            </summary>
+            <remarks>
+            Note that duplicates are not replaced and should be handled carefully
+            </remarks>
+            <example>
+            Import(otherGtpXml,ImportPart.Request|ImportPart.Response);
+            </example>
+            <param name="gtpXml">GtpXml to be imported</param>
+            <param name="importPart">Part(s) to import</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetChannelId">
+            <summary>
+            Return current channel id
+            </summary>
+            <returns>channel id</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.Validate">
+            <summary>
+            Validate if GtpXml conforms to standard. Throws a GtpXmlException on error.
+            </summary>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetParameter(System.String)">
+            <summary>
+            Queries GtpXml for a named parameter and returns the parameter string. 
+            Returns an empty string if parameter name does not match
+            </summary>
+            <param name="parameterName"></param>
+            <returns>parameter value</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.HasParameter(System.String)">
+            <summary>
+            Returns the existence of a request parameter
+            </summary>
+            <param name="parameterName">Parameter name to be checked</param>
+            <returns>True if parameter exists, False otherwise</returns>
+            
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.HasParameterInternal(System.String)">
+            <summary>
+            internal function for HasParameter
+            </summary>
+            <param name="parameterName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddParameter(System.String,System.Object)">
+            <summary>
+            Add a new parameter to the request block
+            </summary>
+            <param name="parameterName">Parameter name</param>
+            <param name="parameterValue">Parameter value</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddParameter(System.String,System.String,System.Object)">
+            <summary>
+            Add a new parameter to the request block
+            </summary>
+            <param name="parameterName">Parameter name</param>
+            <param name="parameterType">Parameter type</param>
+            <param name="parameterValue">Parameter value</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetNodeContent(System.String)">
+            <summary>
+            Queries GtpXml for an XPath query and returns node content. 
+            Returns an empty string if XPath does not match
+            </summary>
+            <param name="xpath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.SetNodeContent(System.String,System.String)">
+            <summary>
+            Sets a node content. If node does not match a GtpXmlException is raised.
+            </summary>
+            <param name="xpath"></param>
+            <param name="nodeContent"></param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.SetNodeAttribute(System.String,System.String,System.String)">
+            <summary>
+            Sets a specified nodes attribute. If node not found an exception is raised.
+            </summary>
+            <param name="xpath">XPath query to node</param>
+            <param name="attributeName">Attribute name of the node</param>
+            <param name="nodeContent">Node content</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AcquireMainElement(System.String)">
+            <summary>
+            Returns a reference to a specified main element. Creates the element if necessary.
+            </summary>
+            <param name="elementName">Element name</param>
+            <returns>Main element</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddGenericEntry(System.String,System.String,System.String,System.String)">
+            <summary>
+            Add a new custom entry to GtpXml
+            </summary>
+            <param name="entryName"></param>
+            <param name="source"></param>
+            <param name="type"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddLogEntry(System.String,System.String,System.String)">
+            <summary>
+            Add a new log entry to GtpXml
+            </summary>
+            <param name="source"></param>
+            <param name="type">Log type</param>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddDebugLogEntry(System.String,System.String,System.String)">
+            <summary>
+            Add a new debug entry to GtpXml
+            </summary>
+            <param name="source"></param>
+            <param name="type"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddResponseOutput(System.String,System.String,System.Object)">
+            <summary>
+            Add a new response output to GtpXml
+            </summary>
+            <param name="name">Response output parameter name</param>
+            <param name="type">Response output parameter type</param>
+            <param name="content">Response output type</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddResponseOutputBinary(System.String,System.Byte[])">
+            <summary>
+            Add binary response output to GtpXml
+            </summary>
+            <param name="name">Response name</param>
+            <param name="data">Binary data</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddResponseOutputXml(System.String,System.String,System.String)">
+            <summary>
+            Add a new Xml document to response 
+            </summary>
+            <param name="name">Name of output</param>
+            <param name="type">Type of output</param>
+            <param name="xmlToAdd">Document body of xml</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddResponseOutputXml(System.String,System.String,System.Xml.XmlDocument)">
+            <summary>
+            Add a new Xml document to respnse
+            </summary>
+            <param name="name">Name of output</param>
+            <param name="type">Type of output</param>
+            <param name="xmlToAdd">Xml document</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.HasResponseOutput(System.String)">
+            <summary>
+            Checks existence of a response output 
+            </summary>
+            <param name="name">Name of output</param>
+            <returns>True if response output exists, false otherwise</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetResponseOutput(System.String)">
+            <summary>
+            Get the response output from GtpXml
+            </summary>
+            <param name="name">Response output parameter name</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetResponseOutputXml(System.String)">
+            <summary>
+            Get the response output from GtpXml in XmlDocument format
+            </summary>
+            <param name="name">respone name</param>
+            <returns>XmlDocument</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetResponseOutputDataSet(System.String)">
+            <summary>
+            Returns an output in GtpDataSet format
+            </summary>
+            <param name="name">Output name</param>
+            <returns>GtpDataSet</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.AddError(System.String,System.String)">
+            <summary>
+            Add error entry to GtpXml
+            </summary>
+            <param name="source">Error source</param>
+            <param name="message">Error message</param>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.HasErrors">
+            <summary>
+            Check if GtpXml contain error entries
+            </summary>
+            <returns>true if GtpXml contains any error entries</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetLastError">
+            <summary>
+            Return last added LogEntry object in Xml
+            </summary>
+            <returns>LogEntry</returns>
+        </member>
+        <member name="M:Gtp.Framework.GtpXml.GetAllErrors">
+            <summary>
+            Return all error entries
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Gtp.Framework.GtpXml.Xml">
+            <summary>
+            Encapsulated Xml Document
+            </summary>
+        </member>
+        <member name="P:Gtp.Framework.GtpXml.AuthenticationMethod">
+            <summary>
+            Sets/gets AuthenticationMethod-id of GtpXml
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.InvokeBusinessException">
+            <summary>
+            Business Exception
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.InvokeException">
+            <summary>
+            InvokeException
+            </summary>
+        </member>
+        <member name="T:Gtp.Framework.UserInfo">
+            <summary>
+            Class to hold user information 
+            </summary>
+        </member>
+    </members>
+</doc>
