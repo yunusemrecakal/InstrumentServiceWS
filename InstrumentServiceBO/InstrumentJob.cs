@@ -30,6 +30,36 @@ namespace InstrumentServiceBO
             {
                 logger.Warn($"JOB Çalıştı. {DateTime.Now}");
 
+                var calendar = Talker.GetGtpCalendar();
+
+                if (calendar != null)
+                {
+                    if (calendar.Today == calendar.AvailableBusinessDay)
+                    {
+                        TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
+                        DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
+
+                        logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
+
+                        ITrigger nextTrigger = TriggerBuilder.Create()
+                                                            .WithIdentity("InstrumentTriggerForAvailableSession1", "group1")
+                                                            .StartAt(session1EndTime)
+                                                            .Build();
+                    }
+                    else
+                    {
+                        TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
+                        DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2);
+
+                        logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
+
+                        ITrigger nextTrigger = TriggerBuilder.Create()
+                                                            .WithIdentity("InstrumentTriggerForAvailableSession2", "group1")
+                                                            .StartAt(session1StartTime)
+                                                            .Build();
+                    }
+                }
+
                 var gds = Talker.GetInstrumentList();
                 logger.Warn($"Enstruman listesi çekildi. Sayısı = {gds.Tables[0].Rows.Count} - {DateTime.Now}");
 

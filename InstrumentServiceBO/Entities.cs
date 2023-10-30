@@ -250,4 +250,39 @@ namespace InstrumentServiceBO
         [DataMember]
         public bool FP;
     }
+
+    [DataContract]
+    public class GtpCalendar
+    {
+        [DataMember]
+        public DateTime CurrentBussinessDate { get; set; }
+        [DataMember]
+        public DateTime Today { get; set; }
+        [DataMember]
+        public bool BusinessDay { get; set; }
+        [DataMember]
+        public DateTime AvailableBusinessDay { get; set; }
+        [DataMember]
+        public DateTime SettlementDate { get; set; }
+        [DataMember]
+        public DateTime NextBusinessDay { get; set; }
+        [DataMember]
+        public int DaysToNextBusinessDay { get; set; }
+        [DataMember]
+        public int SessionCount { get; set; }
+        [DataMember]
+        public int AvailableSession { get; set; }
+        [DataMember]
+        public int ActiveSession { get; set; }
+        [DataMember]
+        public int Session1Start { get; set; }
+        [DataMember]
+        public int Session1End { get; set; }
+        [DataMember]
+        public int Session2Start { get; set; }
+        [DataMember]
+        public int Session2End { get; set; }
+        [DataMember]
+        public DateTime PreviousBusinessDay { get; set; }
+    }
 }

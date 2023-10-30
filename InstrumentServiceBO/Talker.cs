@@ -38,6 +38,45 @@ namespace InstrumentServiceBO
                 throw new Exception(ex.Message);
             }
         }
+        public static GtpCalendar GetGtpCalendar()
+        {
+            GtpCalendar response = new GtpCalendar();
+            try
+            {
+                GtpXml G = new GtpXml("CALENDAR_FUNCTIONS", "1.0");
+                G.AddParameter("Function", "GetAllData");
+                G.AddParameter("MarketPlaceId", "0000-000001-MPL");
+                G = RbmInvoke(G);
+
+                response.ActiveSession = G.GetResponseOutputInt("ActiveSession");
+                response.AvailableBusinessDay = G.GetResponseOutputDateTime("AvailableBusinessDay");
+                response.AvailableSession = G.GetResponseOutputInt("AvailableSession");
+                response.BusinessDay = G.GetResponseOutputBoolean("BusinessDay");
+                response.CurrentBussinessDate = G.GetResponseOutputDateTime("Date");
+                response.DaysToNextBusinessDay = G.GetResponseOutputInt("DaysToNextBusinessDay");
+                response.NextBusinessDay = G.GetResponseOutputDateTime("NextBusinessDay");
+                response.PreviousBusinessDay = G.GetResponseOutputDateTime("PreviousBusinessDay");
+
+                if (G.HasResponseOutput("Session1Start"))
+                    response.Session1Start = G.GetResponseOutputInt("Session1Start");
+                if (G.HasResponseOutput("Session1End"))
+                    response.Session1End = G.GetResponseOutputInt("Session1End");
+                if (G.HasResponseOutput("Session2Start"))
+                    response.Session2Start = G.GetResponseOutputInt("Session2Start");
+                if (G.HasResponseOutput("Session2End"))
+                    response.Session2End = G.GetResponseOutputInt("Session2End");
+
+                response.SessionCount = G.GetResponseOutputInt("SessionCount");
+                response.SettlementDate = G.GetResponseOutputDateTime("SettlementDate");
+                response.Today = G.GetResponseOutputDateTime("ToDay");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return response;
+        }
 
         public static GtpXml RbmInvoke(GtpXml G)
         {
