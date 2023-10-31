@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NLog;
 using Quartz;
+using Quartz.Impl;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using static Quartz.Logging.OperationName;
 
 namespace InstrumentServiceBO
 {
@@ -34,30 +36,7 @@ namespace InstrumentServiceBO
 
                 if (calendar != null)
                 {
-                    if (calendar.Today == calendar.AvailableBusinessDay)
-                    {
-                        TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
-                        DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
-
-                        logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
-
-                        ITrigger nextTrigger = TriggerBuilder.Create()
-                                                            .WithIdentity("InstrumentTriggerForAvailableSession1", "group1")
-                                                            .StartAt(session1EndTime)
-                                                            .Build();
-                    }
-                    else
-                    {
-                        TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
-                        DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2);
-
-                        logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
-
-                        ITrigger nextTrigger = TriggerBuilder.Create()
-                                                            .WithIdentity("InstrumentTriggerForAvailableSession2", "group1")
-                                                            .StartAt(session1StartTime)
-                                                            .Build();
-                    }
+                   ResheduleJob(calendar);
                 }
 
                 var gds = Talker.GetInstrumentList();
@@ -177,6 +156,65 @@ namespace InstrumentServiceBO
             }
         }
 
+        public async void ResheduleJob(GtpCalendar calendar)
+        {
+            var oldTriggerKey = new TriggerKey("instrumentTriggerName");
+
+            var schedulerFactory = new StdSchedulerFactory();
+            var scheduler = await schedulerFactory.GetScheduler();
+            IJobDetail existingJob = await scheduler.GetJobDetail(new JobKey("InstrumentJob"));
+
+            if (calendar.Today == calendar.AvailableBusinessDay)
+            {
+                TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
+                DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
+
+                logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
+
+                ITrigger nextTrigger = TriggerBuilder.Create()
+                                                     .WithIdentity("InstrumentTriggerForAvailableSession1", "group1")
+                                                     .StartAt(session1EndTime)
+                                                     .Build();
+
+                if (existingJob != null)
+                {
+                    await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                }
+                else
+                {
+                    var newJob = JobBuilder.Create<InstrumentJob>()
+                        .WithIdentity("InstrumentJob")
+                        .Build();
+
+                    await scheduler.ScheduleJob(newJob, nextTrigger);
+                }
+            }
+            else
+            {
+                TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
+                DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2);
+
+                logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
+
+                ITrigger nextTrigger = TriggerBuilder.Create()
+                                                    .WithIdentity("InstrumentTriggerForAvailableSession2", "group1")
+                                                    .StartAt(session1StartTime)
+                                                    .Build();
+
+                if (existingJob != null)
+                {
+                    await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                }
+                else
+                {
+                    var newJob = JobBuilder.Create<InstrumentJob>()
+                        .WithIdentity("InstrumentJob")
+                        .Build();
+
+                    await scheduler.ScheduleJob(newJob, nextTrigger);
+                }
+            }
+        }
 
         public string GetCodeForClearExtention(string displayCode)
         {
