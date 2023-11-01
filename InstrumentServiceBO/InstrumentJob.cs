@@ -20,6 +20,7 @@ namespace InstrumentServiceBO
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         public static RedisClientManager RedisClientManager { get; set; }
+        private static int count = 0;
 
         public InstrumentJob()
         {
@@ -158,61 +159,135 @@ namespace InstrumentServiceBO
 
         public async void ResheduleJob(GtpCalendar calendar)
         {
-            var oldTriggerKey = new TriggerKey("instrumentTriggerName");
-
-            var schedulerFactory = new StdSchedulerFactory();
-            var scheduler = await schedulerFactory.GetScheduler();
-            IJobDetail existingJob = await scheduler.GetJobDetail(new JobKey("InstrumentJob"));
-
-            if (calendar.Today == calendar.AvailableBusinessDay)
+            try
             {
-                TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
-                DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
+                var oldTriggerKey = new TriggerKey("instrumentTriggerName");
+                var triggerKeyForSession2 = new TriggerKey("InstrumentTriggerForAvailableSession2", "group1");
+                var triggerKeyForSession1 = new TriggerKey("InstrumentTriggerForAvailableSession1", "group1");
 
-                logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
+                var schedulerFactory = new StdSchedulerFactory();
+                var scheduler = await schedulerFactory.GetScheduler();
+                IJobDetail existingJob = await scheduler.GetJobDetail(new JobKey("InstrumentJob"));
 
-                ITrigger nextTrigger = TriggerBuilder.Create()
-                                                     .WithIdentity("InstrumentTriggerForAvailableSession1", "group1")
-                                                     .StartAt(session1EndTime)
-                                                     .Build();
+                //if (calendar.Today == calendar.AvailableBusinessDay)
+                //{
+                //    TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
+                //    DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
 
-                if (existingJob != null)
+                //    logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
+
+                //    ITrigger nextTrigger = TriggerBuilder.Create()
+                //                                         .WithIdentity("InstrumentTriggerForAvailableSession1", "group1")
+                //                                         .StartAt(session1EndTime)
+                //                                         .Build();
+
+                //    if (existingJob != null)
+                //    {
+                //        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                //    }
+                //    else
+                //    {
+                //        var newJob = JobBuilder.Create<InstrumentJob>()
+                //            .WithIdentity("InstrumentJob")
+                //            .Build();
+
+                //        await scheduler.ScheduleJob(newJob, nextTrigger);
+                //    }
+                //}
+                //else
+                //{
+                //    TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
+                //    DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2);
+
+                //    logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
+
+                //    ITrigger nextTrigger = TriggerBuilder.Create()
+                //                                        .WithIdentity("InstrumentTriggerForAvailableSession2", "group1")
+                //                                        .StartAt(session1StartTime)
+                //                                        .Build();
+
+                //    if (existingJob != null)
+                //    {
+                //        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                //    }
+                //    else
+                //    {
+                //        var newJob = JobBuilder.Create<InstrumentJob>()
+                //            .WithIdentity("InstrumentJob")
+                //            .Build();
+
+                //        await scheduler.ScheduleJob(newJob, nextTrigger);
+                //    }
+                //}
+
+                if (count == 0 || count % 2 == 0)
                 {
-                    await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                    logger.Warn($"Bir sonraki tetikleme saati. {count}");
+                    count++;
+                    //TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
+                    //DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);                
+
+                    //TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
+                    DateTime session1EndTime = DateTime.Now.AddMinutes(2);
+
+                    logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
+
+                    ITrigger nextTrigger = TriggerBuilder.Create()
+                                                         .WithIdentity("InstrumentTriggerForAvailableSession1", "group1")
+                                                         .StartAt(session1EndTime)
+                                                         .Build();
+
+                    if (existingJob != null)
+                    {
+                        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                        await scheduler.RescheduleJob(triggerKeyForSession2, nextTrigger);
+                    }
+                    else
+                    {
+                        var newJob = JobBuilder.Create<InstrumentJob>()
+                            .WithIdentity("InstrumentJob")
+                            .Build();
+
+                        await scheduler.ScheduleJob(newJob, nextTrigger);
+                        await scheduler.Start();
+                    }
                 }
                 else
                 {
-                    var newJob = JobBuilder.Create<InstrumentJob>()
-                        .WithIdentity("InstrumentJob")
-                        .Build();
+                    logger.Warn($"Bir sonraki tetikleme saati. {count}");
+                    count++;
+                    //TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
+                    //DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2); 
 
-                    await scheduler.ScheduleJob(newJob, nextTrigger);
+                    //TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
+                    DateTime session1StartTime = DateTime.Now.AddMinutes(2);
+
+                    logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
+
+                    ITrigger nextTrigger = TriggerBuilder.Create()
+                                                        .WithIdentity("InstrumentTriggerForAvailableSession2", "group1")
+                                                        .StartAt(session1StartTime)
+                                                        .Build();
+
+                    if (existingJob != null)
+                    {
+                        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                        await scheduler.RescheduleJob(triggerKeyForSession1, nextTrigger);
+                    }
+                    else
+                    {
+                        var newJob = JobBuilder.Create<InstrumentJob>()
+                            .WithIdentity("InstrumentJob")
+                            .Build();
+
+                        await scheduler.ScheduleJob(newJob, nextTrigger);
+                        await scheduler.Start();
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
-                DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2);
-
-                logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
-
-                ITrigger nextTrigger = TriggerBuilder.Create()
-                                                    .WithIdentity("InstrumentTriggerForAvailableSession2", "group1")
-                                                    .StartAt(session1StartTime)
-                                                    .Build();
-
-                if (existingJob != null)
-                {
-                    await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
-                }
-                else
-                {
-                    var newJob = JobBuilder.Create<InstrumentJob>()
-                        .WithIdentity("InstrumentJob")
-                        .Build();
-
-                    await scheduler.ScheduleJob(newJob, nextTrigger);
-                }
+                logger.Error($"Error: {ex.Message} Date: {DateTime.Now}");
             }
         }
 
