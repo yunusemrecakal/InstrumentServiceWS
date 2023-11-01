@@ -20,8 +20,6 @@ namespace InstrumentServiceBO
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         public static RedisClientManager RedisClientManager { get; set; }
-        private static int count = 0;
-
         public InstrumentJob()
         {
             RedisClientManager = RedisClientManager.Instance;
@@ -169,66 +167,10 @@ namespace InstrumentServiceBO
                 var scheduler = await schedulerFactory.GetScheduler();
                 IJobDetail existingJob = await scheduler.GetJobDetail(new JobKey("InstrumentJob"));
 
-                //if (calendar.Today == calendar.AvailableBusinessDay)
-                //{
-                //    TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
-                //    DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
-
-                //    logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
-
-                //    ITrigger nextTrigger = TriggerBuilder.Create()
-                //                                         .WithIdentity("InstrumentTriggerForAvailableSession1", "group1")
-                //                                         .StartAt(session1EndTime)
-                //                                         .Build();
-
-                //    if (existingJob != null)
-                //    {
-                //        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
-                //    }
-                //    else
-                //    {
-                //        var newJob = JobBuilder.Create<InstrumentJob>()
-                //            .WithIdentity("InstrumentJob")
-                //            .Build();
-
-                //        await scheduler.ScheduleJob(newJob, nextTrigger);
-                //    }
-                //}
-                //else
-                //{
-                //    TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
-                //    DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2);
-
-                //    logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
-
-                //    ITrigger nextTrigger = TriggerBuilder.Create()
-                //                                        .WithIdentity("InstrumentTriggerForAvailableSession2", "group1")
-                //                                        .StartAt(session1StartTime)
-                //                                        .Build();
-
-                //    if (existingJob != null)
-                //    {
-                //        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
-                //    }
-                //    else
-                //    {
-                //        var newJob = JobBuilder.Create<InstrumentJob>()
-                //            .WithIdentity("InstrumentJob")
-                //            .Build();
-
-                //        await scheduler.ScheduleJob(newJob, nextTrigger);
-                //    }
-                //}
-
-                if (count == 0 || count % 2 == 0)
+                if (calendar.AvailableBusinessDay == calendar.Today)
                 {
-                    logger.Warn($"Bir sonraki tetikleme saati. {count}");
-                    count++;
-                    //TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
-                    //DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);                
-
-                    //TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
-                    DateTime session1EndTime = DateTime.Now.AddMinutes(2);
+                    TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
+                    DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
 
                     logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
 
@@ -239,8 +181,17 @@ namespace InstrumentServiceBO
 
                     if (existingJob != null)
                     {
-                        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
-                        await scheduler.RescheduleJob(triggerKeyForSession2, nextTrigger);
+                        bool triggerExists = await scheduler.CheckExists(oldTriggerKey);
+                        if (triggerExists)
+                        {
+                            logger.Warn($"İptal edilen program. instrumentTriggerName");
+                            await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                        }
+                        else
+                        {
+                            logger.Warn($"İptal edilen program. InstrumentTriggerForAvailableSession2");
+                            await scheduler.RescheduleJob(triggerKeyForSession2, nextTrigger);
+                        }
                     }
                     else
                     {
@@ -254,13 +205,8 @@ namespace InstrumentServiceBO
                 }
                 else
                 {
-                    logger.Warn($"Bir sonraki tetikleme saati. {count}");
-                    count++;
-                    //TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
-                    //DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2); 
-
-                    //TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
-                    DateTime session1StartTime = DateTime.Now.AddMinutes(2);
+                    TimeSpan session1StartSpan = new TimeSpan(calendar.Session1Start / 60, calendar.Session1Start % 60, 0);
+                    DateTime session1StartTime = new DateTime(calendar.NextBusinessDay.Year, calendar.NextBusinessDay.Month, calendar.NextBusinessDay.Day).Add(session1StartSpan).AddHours(-2);
 
                     logger.Warn($"Bir sonraki tetikleme saati. {session1StartTime}");
 
@@ -271,8 +217,17 @@ namespace InstrumentServiceBO
 
                     if (existingJob != null)
                     {
-                        await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
-                        await scheduler.RescheduleJob(triggerKeyForSession1, nextTrigger);
+                        bool triggerExists = await scheduler.CheckExists(oldTriggerKey);
+                        if (triggerExists)
+                        {
+                            logger.Warn($"İptal edilen program. instrumentTriggerName");
+                            await scheduler.RescheduleJob(oldTriggerKey, nextTrigger);
+                        }
+                        else
+                        {
+                            logger.Warn($"İptal edilen program. InstrumentTriggerForAvailableSession1");
+                            await scheduler.RescheduleJob(triggerKeyForSession1, nextTrigger);
+                        }
                     }
                     else
                     {
