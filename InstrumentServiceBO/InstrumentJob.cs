@@ -170,7 +170,7 @@ namespace InstrumentServiceBO
                 if (calendar.AvailableBusinessDay == calendar.Today)
                 {
                     TimeSpan session1EndSpan = new TimeSpan(calendar.Session1End / 60, calendar.Session1End % 60, 0);
-                    DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan);
+                    DateTime session1EndTime = new DateTime(calendar.Today.Year, calendar.Today.Month, calendar.Today.Day).Add(session1EndSpan).AddMinutes(2);
 
                     logger.Warn($"Bir sonraki tetikleme saati. {session1EndTime}");
 
