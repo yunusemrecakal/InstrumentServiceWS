@@ -3062,7 +3062,6 @@
         <member name="M:NLog.Common.ConversionHelpers.TryParseEnum_net3``1(System.String,System.Boolean,``0@)">
             <summary>
             Enum.TryParse implementation for .net 3.5 
-            
             </summary>
             <returns></returns>
             <remarks>Don't uses reflection</remarks>
@@ -4435,24 +4434,6 @@
             </summary>
             <param name="stringReader">The string reader.</param>
         </member>
-        <member name="P:NLog.Conditions.ConditionTokenizer.TokenType">
-            <summary>
-            Gets the type of the token.
-            </summary>
-            <value>The type of the token.</value>
-        </member>
-        <member name="P:NLog.Conditions.ConditionTokenizer.TokenValue">
-            <summary>
-            Gets the token value.
-            </summary>
-            <value>The token value.</value>
-        </member>
-        <member name="P:NLog.Conditions.ConditionTokenizer.StringTokenValue">
-            <summary>
-            Gets the value of a string token.
-            </summary>
-            <value>The string token value.</value>
-        </member>
         <member name="M:NLog.Conditions.ConditionTokenizer.Expect(NLog.Conditions.ConditionTokenType)">
             <summary>
             Asserts current token type and advances to the next token.
@@ -4620,9 +4601,13 @@
         </member>
         <member name="T:NLog.Config.ConfigSectionHandler">
             <summary>
-            Class for providing Nlog configuration xml code from app.config
-            to <see cref="T:NLog.Config.XmlLoggingConfiguration"/>
+            Represents NLog ConfigSection for loading <see cref="T:NLog.Config.XmlLoggingConfiguration"/> from app.config / web.config
             </summary>
+            <remarks><code>
+            &lt;configSections&gt;
+              &lt;section name=&quot;NLog&quot; type=&quot;NLog.Config.ConfigSectionHandler, NLog&quot; /&gt;
+            &lt;/configSections&gt;
+            </code></remarks>
         </member>
         <member name="M:NLog.Config.ConfigSectionHandler.DeserializeElement(System.Xml.XmlReader,System.Boolean)">
             <summary>
@@ -4651,9 +4636,9 @@
         </member>
         <member name="T:NLog.Config.ConfigurationItemFactory">
             <summary>
-            Provides registration information for named items (targets, layouts, layout renderers, etc.) managed by NLog.
+            Provides registration information for named items (targets, layouts, layout renderers, etc.)
             
-            Everything of an assembly could be loaded by <see cref="M:NLog.Config.ConfigurationItemFactory.RegisterItemsFromAssembly(System.Reflection.Assembly)"/>
+            Supports creating item-instance from their type-alias, when parsing NLog configuration
             </summary>
         </member>
         <member name="E:NLog.Config.ConfigurationItemFactory.AssemblyLoading">
@@ -4980,12 +4965,7 @@
             <param name="renderer">the renderer that renders the value.</param>
         </member>
         <member name="M:NLog.Config.LayoutRendererFactory.TryCreateInstance(System.String,NLog.LayoutRenderers.LayoutRenderer@)">
-            <summary>
-            Tries to create an item instance.
-            </summary>
-            <param name="itemName">Name of the item.</param>
-            <param name="result">The result.</param>
-            <returns>True if instance was created successfully, false otherwise.</returns>
+            <inheritdoc/>
         </member>
         <member name="T:NLog.Config.IFactory">
             <summary>
@@ -4999,13 +4979,14 @@
         </member>
         <member name="M:NLog.Config.IFactory`1.RegisterType``1(System.String)">
             <summary>
-            Registers type-creation from type-alias
+            Registers type-creation with type-alias
             </summary>
         </member>
         <member name="M:NLog.Config.IFactory`1.TryCreateInstance(System.String,`0@)">
             <summary>
-            Create type-instance from type-alias
+            Tries to create an item instance with type-alias
             </summary>
+            <returns>True if instance was created successfully, false otherwise.</returns>
         </member>
         <member name="T:NLog.Config.IIncludeContext">
             <summary>
@@ -5677,6 +5658,7 @@
             <returns>
             A new instance of <see cref="T:NLog.Config.LoggingConfiguration"/> that represents the updated configuration.
             </returns>
+            <remarks>Must assign the returned object to LogManager.Configuration to activate it</remarks>
         </member>
         <member name="M:NLog.Config.LoggingConfiguration.PrepareForReload(NLog.Config.LoggingConfiguration)">
             <summary>
@@ -6211,55 +6193,6 @@
             Initializes a new instance of the <see cref="T:NLog.Config.NLogDependencyResolveException" /> class.
             </summary>
         </member>
-        <member name="T:NLog.Config.NLogXmlElement">
-            <summary>
-            Represents simple XML element with case-insensitive attribute semantics.
-            </summary>
-        </member>
-        <member name="M:NLog.Config.NLogXmlElement.#ctor(System.Xml.XmlReader)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NLog.Config.NLogXmlElement"/> class.
-            </summary>
-            <param name="reader">The reader to initialize element from.</param>
-        </member>
-        <member name="P:NLog.Config.NLogXmlElement.LocalName">
-            <summary>
-            Gets the element name.
-            </summary>
-        </member>
-        <member name="P:NLog.Config.NLogXmlElement.AttributeValues">
-            <summary>
-            Gets the dictionary of attribute values.
-            </summary>
-        </member>
-        <member name="P:NLog.Config.NLogXmlElement.Children">
-            <summary>
-            Gets the collection of child elements.
-            </summary>
-        </member>
-        <member name="P:NLog.Config.NLogXmlElement.Value">
-            <summary>
-            Gets the value of the element.
-            </summary>
-        </member>
-        <member name="M:NLog.Config.NLogXmlElement.FilterChildren(System.String)">
-            <summary>
-            Returns children elements with the specified element name.
-            </summary>
-            <param name="elementName">Name of the element.</param>
-            <returns>Children elements with the specified element name.</returns>
-        </member>
-        <member name="M:NLog.Config.NLogXmlElement.AssertName(System.String[])">
-            <summary>
-            Asserts that the name of the element is among specified element names.
-            </summary>
-            <param name="allowedNames">The allowed names.</param>
-        </member>
-        <member name="M:NLog.Config.NLogXmlElement.IsSpecialXmlAttribute(System.Xml.XmlReader)">
-            <summary>
-            Special attribute we could ignore
-            </summary>
-        </member>
         <member name="T:NLog.Config.PropertyTypeConverter">
             <summary>
             Default implementation of <see cref="T:NLog.Config.IPropertyTypeConverter"/>
@@ -6589,7 +6522,8 @@
             <summary>
             Re-reads the original configuration file and returns the new <see cref="T:NLog.Config.LoggingConfiguration" /> object.
             </summary>
-            <returns>The new <see cref="T:NLog.Config.XmlLoggingConfiguration" /> object.</returns>
+            <returns>The newly loaded <see cref="T:NLog.Config.XmlLoggingConfiguration" /> instance.</returns>
+            <remarks>Must assign the returned object to LogManager.Configuration to activate it</remarks>
         </member>
         <member name="M:NLog.Config.XmlLoggingConfiguration.GetCandidateConfigFilePaths">
             <summary>
@@ -6630,7 +6564,7 @@
             <param name="fileName"></param>
             <param name="autoReloadDefault"></param>
         </member>
-        <member name="M:NLog.Config.XmlLoggingConfiguration.ParseTopLevel(NLog.Config.NLogXmlElement,System.String,System.Boolean)">
+        <member name="M:NLog.Config.XmlLoggingConfiguration.ParseTopLevel(NLog.Config.XmlLoggingConfigurationElement,System.String,System.Boolean)">
             <summary>
             Parse the root
             </summary>
@@ -6638,7 +6572,7 @@
             <param name="filePath">path to config file.</param>
             <param name="autoReloadDefault">The default value for the autoReload option.</param>
         </member>
-        <member name="M:NLog.Config.XmlLoggingConfiguration.ParseConfigurationElement(NLog.Config.NLogXmlElement,System.String,System.Boolean)">
+        <member name="M:NLog.Config.XmlLoggingConfiguration.ParseConfigurationElement(NLog.Config.XmlLoggingConfigurationElement,System.String,System.Boolean)">
             <summary>
             Parse {configuration} xml element.
             </summary>
@@ -6672,6 +6606,55 @@
         <member name="M:NLog.Config.XmlLoggingConfiguration.ToString">
             <inheritdoc/>
         </member>
+        <member name="T:NLog.Config.XmlLoggingConfigurationElement">
+            <summary>
+            Represents simple XML element with case-insensitive attribute semantics.
+            </summary>
+        </member>
+        <member name="M:NLog.Config.XmlLoggingConfigurationElement.#ctor(System.Xml.XmlReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NLog.Config.XmlLoggingConfigurationElement"/> class.
+            </summary>
+            <param name="reader">The reader to initialize element from.</param>
+        </member>
+        <member name="P:NLog.Config.XmlLoggingConfigurationElement.LocalName">
+            <summary>
+            Gets the element name.
+            </summary>
+        </member>
+        <member name="P:NLog.Config.XmlLoggingConfigurationElement.AttributeValues">
+            <summary>
+            Gets the dictionary of attribute values.
+            </summary>
+        </member>
+        <member name="P:NLog.Config.XmlLoggingConfigurationElement.Children">
+            <summary>
+            Gets the collection of child elements.
+            </summary>
+        </member>
+        <member name="P:NLog.Config.XmlLoggingConfigurationElement.Value">
+            <summary>
+            Gets the value of the element.
+            </summary>
+        </member>
+        <member name="M:NLog.Config.XmlLoggingConfigurationElement.FilterChildren(System.String)">
+            <summary>
+            Returns children elements with the specified element name.
+            </summary>
+            <param name="elementName">Name of the element.</param>
+            <returns>Children elements with the specified element name.</returns>
+        </member>
+        <member name="M:NLog.Config.XmlLoggingConfigurationElement.AssertName(System.String[])">
+            <summary>
+            Asserts that the name of the element is among specified element names.
+            </summary>
+            <param name="allowedNames">The allowed names.</param>
+        </member>
+        <member name="M:NLog.Config.XmlLoggingConfigurationElement.IsSpecialXmlAttribute(System.Xml.XmlReader)">
+            <summary>
+            Special attribute we could ignore
+            </summary>
+        </member>
         <member name="T:NLog.GlobalDiagnosticsContext">
             <summary>
             Global Diagnostics Context - a dictionary structure to hold per-application-instance values.
@@ -6679,21 +6662,21 @@
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.Set(System.String,System.String)">
             <summary>
-            Sets the Global Diagnostics Context item to the specified value.
+            Sets the value with the specified key in the Global Diagnostics Context (GDC) dictionary
             </summary>
             <param name="item">Item name.</param>
             <param name="value">Item value.</param>
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.Set(System.String,System.Object)">
             <summary>
-            Sets the Global Diagnostics Context item to the specified value.
+            Sets the value with the specified key in the Global Diagnostics Context (GDC) dictionary
             </summary>
             <param name="item">Item name.</param>
             <param name="value">Item value.</param>
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.Get(System.String)">
             <summary>
-            Gets the Global Diagnostics Context named item.
+            Gets the value with the specified key in the Global Diagnostics Context (GDC) dictionary
             </summary>
             <param name="item">Item name.</param>
             <returns>The value of <paramref name="item"/>, if defined; otherwise <see cref="F:System.String.Empty"/>.</returns>
@@ -6701,7 +6684,7 @@
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.Get(System.String,System.IFormatProvider)">
             <summary>
-            Gets the Global Diagnostics Context item.
+            Gets the value with the specified key in the Global Diagnostics Context (GDC) dictionary
             </summary>
             <param name="item">Item name.</param>
             <param name="formatProvider"><see cref="T:System.IFormatProvider"/> to use when converting the item's value to a string.</param>
@@ -6710,33 +6693,33 @@
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.GetObject(System.String)">
             <summary>
-            Gets the Global Diagnostics Context named item.
+            Gets the value with the specified key in the Global Diagnostics Context (GDC) dictionary
             </summary>
             <param name="item">Item name.</param>
             <returns>The item value, if defined; otherwise <c>null</c>.</returns>
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.GetNames">
             <summary>
-            Returns all item names
+            Gets all key-names from Global Diagnostics Context (GDC) dictionary
             </summary>
             <returns>A collection of the names of all items in the Global Diagnostics Context.</returns>
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.Contains(System.String)">
             <summary>
-            Checks whether the specified item exists in the Global Diagnostics Context.
+            Determines whether the Global Diagnostics Context (GDC) dictionary contains the specified key.
             </summary>
             <param name="item">Item name.</param>
             <returns>A boolean indicating whether the specified item exists in current thread GDC.</returns>
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.Remove(System.String)">
             <summary>
-            Removes the specified item from the Global Diagnostics Context.
+            Removes the value with the specified key from the Global Diagnostics Context (GDC) dictionary
             </summary>
             <param name="item">Item name.</param>
         </member>
         <member name="M:NLog.GlobalDiagnosticsContext.Clear">
             <summary>
-            Clears the content of the GDC.
+            Clears the content of the Global Diagnostics Context (GDC) dictionary.
             </summary>
         </member>
         <member name="T:NLog.MappedDiagnosticsContext">
@@ -14126,7 +14109,7 @@
         </member>
         <member name="F:NLog.Layouts.CsvColumnDelimiterMode.Custom">
             <summary>
-            Custom string, specified by the CustomDelimiter.
+            Custom string, specified by the <see cref="P:NLog.Layouts.CsvLayout.CustomColumnDelimiter"/>.
             </summary>
         </member>
         <member name="T:NLog.Layouts.CsvLayout">
@@ -14179,7 +14162,7 @@
         </member>
         <member name="P:NLog.Layouts.CsvLayout.CustomColumnDelimiter">
             <summary>
-            Gets or sets the custom column delimiter value (valid when ColumnDelimiter is set to 'Custom').
+            Gets or sets the custom column delimiter value (valid when <see cref="P:NLog.Layouts.CsvLayout.Delimiter"/> is set to <see cref="F:NLog.Layouts.CsvColumnDelimiterMode.Custom"/>).
             </summary>
             <docgen category='Layout Options' order='10' />
         </member>
@@ -14231,7 +14214,7 @@
         </member>
         <member name="F:NLog.Layouts.CsvQuotingMode.All">
             <summary>
-            Quote all column (Fast)
+            Quote Always (Fast)
             </summary>
         </member>
         <member name="F:NLog.Layouts.CsvQuotingMode.Nothing">

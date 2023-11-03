@@ -51,4 +51,3 @@ C:\Users\yunusc\source\repos\TSInstrumentService\InstrumentServiceWS\InstrumentS
 C:\Users\yunusc\source\repos\TSInstrumentService\InstrumentServiceWS\InstrumentServiceBO\bin\Debug\Caching.Redis.pdb
 C:\Users\yunusc\source\repos\TSInstrumentService\InstrumentServiceWS\InstrumentServiceBO\bin\Debug\Caching.Redis.dll.config
 C:\Users\yunusc\source\repos\TSInstrumentService\InstrumentServiceWS\InstrumentServiceBO\bin\Debug\Web.Core.pdb
-C:\Users\yunusc\source\repos\TSInstrumentService\InstrumentServiceWS\InstrumentServiceBO\bin\Debug\NLog.xsd
